@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'pages/login/login_page.dart';
 import 'pages/homepage.dart';
-import 'providers/counter_provider.dart';
+import 'pages/profile/profile_page.dart';
+import 'pages/settings/settings_page.dart';
+import 'pages/recipes/recipes_page.dart';
+import 'pages/market/market_page.dart';
+import 'pages/store/store_page.dart';
+import 'pages/my_recipes/my_recipes_page.dart';
 
 void main() {
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => CounterProvider()),
-      ],
-      child: const MyApp(),
-    ),
-  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -23,12 +21,22 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Green Snails',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF1B5E20),
+          brightness: Brightness.light,
+        ),
         useMaterial3: true,
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => const HomePage(),
+        '/': (context) => const LoginPage(),
+        '/home': (context) => const HomePage(),
+        '/profile': (context) => const ProfilePage(),
+        '/settings': (context) => const SettingsPage(),
+        '/recipes': (context) => const RecipesPage(),
+        '/market': (context) => const MarketPage(),
+        '/store': (context) => const StorePage(),
+        '/my-recipes': (context) => const MyRecipesPage(),
       },
     );
   }
