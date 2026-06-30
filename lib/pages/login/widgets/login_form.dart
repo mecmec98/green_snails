@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../../providers/auth_provider.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -23,13 +25,30 @@ class _LoginFormState extends State<LoginForm> {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
     if (email.isEmpty || password.isEmpty) return;
-    Navigator.pushReplacementNamed(context, '/home');
+
+    context.read<AuthProvider>().signInWithEmail(email, password);
   }
 
   @override
   Widget build(BuildContext context) {
+    final auth = context.watch<AuthProvider>();
+
     return Column(
       children: [
+        if (auth.error != null)
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(12),
+            margin: const EdgeInsets.only(bottom: 16),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.errorContainer,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(
+              auth.error!,
+              style: TextStyle(color: Theme.of(context).colorScheme.onErrorContainer),
+            ),
+          ),
         TextField(
           controller: _emailController,
           keyboardType: TextInputType.emailAddress,
@@ -67,8 +86,14 @@ class _LoginFormState extends State<LoginForm> {
           width: double.infinity,
           height: 48,
           child: FilledButton(
-            onPressed: _submit,
-            child: const Text('Sign In'),
+            onPressed: auth.loading ? null : _submit,
+            child: auth.loading
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                  )
+                : const Text('Sign In'),
           ),
         ),
       ],

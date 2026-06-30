@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../../providers/auth_provider.dart';
 
 class ProfileAvatar extends StatelessWidget {
   const ProfileAvatar({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final auth = context.watch<AuthProvider>();
+
     return PopupMenuButton<String>(
       offset: const Offset(0, 48),
       onSelected: (value) {
@@ -22,7 +26,7 @@ class ProfileAvatar extends StatelessWidget {
             Navigator.pushNamed(context, '/settings');
             break;
           case 'logout':
-            Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+            auth.signOut();
             break;
         }
       },

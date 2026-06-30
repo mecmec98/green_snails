@@ -1,8 +1,21 @@
 import 'package:flutter/material.dart';
-import '../my_recipes_page.dart';
+
+class RecipeCardData {
+  final String name;
+  final String time;
+  final IconData icon;
+  final double rating;
+
+  const RecipeCardData({
+    required this.name,
+    required this.time,
+    required this.icon,
+    required this.rating,
+  });
+}
 
 class RecipeCard extends StatelessWidget {
-  final RecipeData recipe;
+  final RecipeCardData recipe;
   final bool isFavorite;
   final VoidCallback onFavoriteToggle;
 
@@ -76,10 +89,10 @@ class RecipeCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   Row(
                     children: [
-                      Icon(Icons.star, size: 12, color: Colors.amber),
+                      const Icon(Icons.star, size: 12, color: Colors.amber),
                       const SizedBox(width: 2),
                       Text(
-                        recipe.rating.toString(),
+                        recipe.rating.toStringAsFixed(1),
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               fontWeight: FontWeight.w600,
                               color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -95,26 +108,6 @@ class RecipeCard extends StatelessWidget {
                             ),
                       ),
                     ],
-                  ),
-                  const SizedBox(height: 6),
-                  Wrap(
-                    spacing: 4,
-                    runSpacing: 4,
-                    children: recipe.categories.map((cat) {
-                      return Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.secondaryContainer,
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Text(
-                          cat,
-                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                color: Theme.of(context).colorScheme.onSecondaryContainer,
-                              ),
-                        ),
-                      );
-                    }).toList(),
                   ),
                 ],
               ),

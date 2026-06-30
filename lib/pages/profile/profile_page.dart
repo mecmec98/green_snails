@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../providers/auth_provider.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final auth = context.watch<AuthProvider>();
+    final profile = auth.profile;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
@@ -25,12 +30,12 @@ class ProfilePage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              'User Name',
+              profile?.displayName ?? 'User',
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             const SizedBox(height: 8),
             Text(
-              'user@example.com',
+              auth.user?.email ?? '',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
