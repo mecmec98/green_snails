@@ -6,6 +6,7 @@ import 'providers/auth_provider.dart';
 import 'providers/recipe_provider.dart';
 import 'providers/market_provider.dart';
 import 'providers/store_provider.dart';
+import 'providers/shopping_list_provider.dart';
 import 'pages/login/login_page.dart';
 import 'pages/homepage.dart';
 import 'pages/profile/profile_page.dart';
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => RecipeProvider()),
         ChangeNotifierProvider(create: (_) => MarketProvider()),
         ChangeNotifierProvider(create: (_) => StoreProvider()),
+        ChangeNotifierProvider(create: (_) => ShoppingListProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

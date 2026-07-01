@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../models/recipe.dart';
 import '../../models/review.dart';
 import '../../services/recipe_service.dart';
 import '../../services/review_service.dart';
 import '../../providers/auth_provider.dart';
-import 'package:provider/provider.dart';
+import '../../providers/shopping_list_provider.dart';
 
 class RecipeDetailPage extends StatefulWidget {
   final String recipeId;
@@ -204,6 +205,26 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
               ],
             ),
           )),
+          const SizedBox(height: 12),
+          OutlinedButton.icon(
+            onPressed: () {
+              final names = recipe.ingredients
+                  .map((i) => '${i['quantity'] ?? ''} ${i['unit'] ?? ''} ${i['name'] ?? ''}'.trim())
+                  .where((s) => s.isNotEmpty)
+                  .toList();
+              if (names.isNotEmpty) {
+                context.read<ShoppingListProvider>().addItems(names, DateTime.now());
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('${names.length} ingredients added to shopping list'),
+                    duration: const Duration(seconds: 2),
+                  ),
+                );
+              }
+            },
+            icon: const Icon(Icons.shopping_cart_outlined),
+            label: const Text('Add to Shopping List'),
+          ),
           const SizedBox(height: 24),
           Text('Instructions', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
