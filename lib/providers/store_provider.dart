@@ -11,11 +11,13 @@ class StoreProvider extends ChangeNotifier {
   int _total = 0;
   int _page = 1;
   bool _hasMore = true;
+  bool _hasStore = false;
 
   List<StoreItem> get items => _items;
   bool get loading => _loading;
   String? get error => _error;
   bool get hasMore => _hasMore;
+  bool get hasStore => _hasStore;
 
   Future<void> loadItems(String userId, {bool refresh = false}) async {
     if (refresh) {
@@ -84,6 +86,25 @@ class StoreProvider extends ChangeNotifier {
       return true;
     } catch (e) {
       _error = e.toString();
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> createStore(String userId, {String name = '', String? description}) async {
+    _loading = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      await Future.delayed(const Duration(milliseconds: 500));
+      _hasStore = true;
+      _loading = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _error = e.toString();
+      _loading = false;
       notifyListeners();
       return false;
     }
