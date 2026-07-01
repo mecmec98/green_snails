@@ -11,14 +11,14 @@ class AuthService {
   User? get currentUser => _supabase.auth.currentUser;
   Stream<AuthState> get onAuthStateChange => _supabase.auth.onAuthStateChange;
 
-  Future<void> signInWithEmail(String email, String password) async {
+  Future<Profile> signInWithEmail(String email, String password) async {
     await _supabase.auth.signInWithPassword(email: email, password: password);
-    await _syncProfile();
+    return _syncProfile();
   }
 
-  Future<void> signUpWithEmail(String email, String password, String displayName) async {
+  Future<Profile> signUpWithEmail(String email, String password, String displayName) async {
     await _supabase.auth.signUp(email: email, password: password, data: {'full_name': displayName});
-    await _syncProfile();
+    return _syncProfile();
   }
 
   Future<void> signInWithGoogle() async {
@@ -47,11 +47,10 @@ class AuthService {
     return Profile.fromJson(response['profile']);
   }
 
-  Future<void> _syncProfile() async {
-    try {
-      await _api.post('/auth/sync-profile', body: {
-        'display_name': _supabase.auth.currentUser?.userMetadata?['full_name'] ?? _supabase.auth.currentUser?.email,
-      });
-    } catch (_) {}
+  Future<Profile> _syncProfile() async {
+    final response = await _api.post('/auth/sync-profile', body: {
+      'display_name': _supabase.auth.currentUser?.userMetadata?['full_name'] ?? _supabase.auth.currentUser?.email,
+    });
+    return Profile.fromJson(response['profile']);
   }
 }

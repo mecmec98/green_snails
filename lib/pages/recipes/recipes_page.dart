@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/recipe_provider.dart';
 import '../../models/recipe.dart';
+import 'recipe_detail_page.dart';
 
 class RecipesPage extends StatefulWidget {
   const RecipesPage({super.key});
@@ -51,6 +52,14 @@ class _RecipesPageState extends State<RecipesPage> {
                             Text(recipe.ratingAvg.toStringAsFixed(1)),
                           ],
                         ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => RecipeDetailPage(recipeId: recipe.id),
+                            ),
+                          );
+                        },
                       ),
                     );
                   },

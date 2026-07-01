@@ -14,6 +14,7 @@ import 'pages/recipes/recipes_page.dart';
 import 'pages/market/market_page.dart';
 import 'pages/store/store_page.dart';
 import 'pages/my_recipes/my_recipes_page.dart';
+import 'pages/my_recipes/create_recipe_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -58,42 +59,34 @@ class MyApp extends StatelessWidget {
           '/market': (context) => const MarketPage(),
           '/store': (context) => const StorePage(),
           '/my-recipes': (context) => const MyRecipesPage(),
+          '/create-recipe': (context) => const CreateRecipePage(),
         },
       ),
     );
   }
 }
 
-class AuthGate extends StatefulWidget {
+class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
 
   @override
-  State<AuthGate> createState() => _AuthGateState();
-}
-
-class _AuthGateState extends State<AuthGate> {
-  @override
-  void initState() {
-    super.initState();
-    Supabase.instance.client.auth.onAuthStateChange.listen((data) {
-      if (data.event == AuthChangeEvent.signedIn) {
-        if (mounted) {
-          Navigator.of(context).pushReplacementNamed('/home');
-        }
-      } else if (data.event == AuthChangeEvent.signedOut) {
-        if (mounted) {
-          Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
-        }
-      }
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final session = Supabase.instance.client.auth.currentSession;
-    if (session != null) {
-      return const HomePage();
-    }
-    return const LoginPage();
+    return Consumer<AuthProvider>(
+      builder: (context, auth, _) {
+        if (!auth.initialized) {
+          return Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+          );
+        }
+        if (auth.isAuthenticated) {
+          return const HomePage();
+        }
+        return const LoginPage();
+      },
+    );
   }
 }

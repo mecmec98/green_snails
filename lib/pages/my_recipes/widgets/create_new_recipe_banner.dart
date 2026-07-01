@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 
 class CreateNewRecipeBanner extends StatelessWidget {
-  const CreateNewRecipeBanner({super.key});
+  final VoidCallback? onTap;
+
+  const CreateNewRecipeBanner({super.key, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return Card(
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: () {},
+        onTap: onTap,
         child: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(

@@ -13,6 +13,7 @@ class _LoginFormState extends State<LoginForm> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
+  bool _rememberMe = false;
 
   @override
   void dispose() {
@@ -26,7 +27,7 @@ class _LoginFormState extends State<LoginForm> {
     final password = _passwordController.text.trim();
     if (email.isEmpty || password.isEmpty) return;
 
-    context.read<AuthProvider>().signInWithEmail(email, password);
+    context.read<AuthProvider>().signInWithEmail(email, password, rememberMe: _rememberMe);
   }
 
   @override
@@ -81,7 +82,31 @@ class _LoginFormState extends State<LoginForm> {
             ),
           ),
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            Checkbox(
+              value: _rememberMe,
+              onChanged: (value) {
+                setState(() {
+                  _rememberMe = value ?? false;
+                });
+              },
+            ),
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  _rememberMe = !_rememberMe;
+                });
+              },
+              child: Text(
+                'Remember me',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
         SizedBox(
           width: double.infinity,
           height: 48,

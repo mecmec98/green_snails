@@ -2,9 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/recipe_provider.dart';
 import '../../models/recipe.dart';
+import '../../services/category_service.dart';
+import '../recipes/recipe_detail_page.dart';
 import 'widgets/create_new_recipe_banner.dart';
 import 'widgets/category_selector.dart';
 import 'widgets/recipe_card.dart';
+
+IconData _iconFromName(String name) {
+  switch (name) {
+    case 'wb_sunny': return Icons.wb_sunny_outlined;
+    case 'wb_cloudy': return Icons.wb_cloudy_outlined;
+    case 'nights_stay': return Icons.nights_stay_outlined;
+    case 'cake': return Icons.cake_outlined;
+    case 'eco': return Icons.eco_rounded;
+    case 'cookie': return Icons.cookie_outlined;
+    case 'local_drink': return Icons.local_drink_outlined;
+    case 'soup_kitchen': return Icons.soup_kitchen_outlined;
+    default: return Icons.grid_view_rounded;
+  }
+}
 
 class MyRecipesPage extends StatefulWidget {
   const MyRecipesPage({super.key});
@@ -15,23 +31,35 @@ class MyRecipesPage extends StatefulWidget {
 
 class _MyRecipesPageState extends State<MyRecipesPage> {
   String? _selectedCategory;
-
-  final _categories = [
-    CategoryData('All', Icons.grid_view_rounded),
-    CategoryData('Favorites', Icons.favorite_rounded),
-    CategoryData('Breakfast', Icons.wb_sunny_outlined),
-    CategoryData('Lunch', Icons.wb_cloudy_outlined),
-    CategoryData('Dinner', Icons.nights_stay_outlined),
-    CategoryData('Vegan', Icons.eco_rounded),
-    CategoryData('Dessert', Icons.cake_outlined),
-  ];
+  List<CategoryData> _categories = [];
+  bool _loadingCategories = true;
 
   @override
   void initState() {
     super.initState();
     Future.microtask(() {
       context.read<RecipeProvider>().loadMyRecipes(refresh: true);
+      _loadCategories();
     });
+  }
+
+  Future<void> _loadCategories() async {
+    try {
+      final cats = await CategoryService().getCategories();
+      if (mounted) {
+        setState(() {
+          _categories = [
+            const CategoryData('All', Icons.grid_view_rounded),
+            ...cats.map((c) => CategoryData(c.name, _iconFromName(c.icon))),
+          ];
+          _loadingCategories = false;
+        });
+      }
+    } catch (_) {
+      if (mounted) {
+        setState(() => _loadingCategories = false);
+      }
+    }
   }
 
   @override
@@ -65,9 +93,16 @@ class _MyRecipesPageState extends State<MyRecipesPage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
-            child: CreateNewRecipeBanner(),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+            child: CreateNewRecipeBanner(
+              onTap: () async {
+                final result = await Navigator.pushNamed(context, '/create-recipe');
+                if (result == true && mounted) {
+                  context.read<RecipeProvider>().loadMyRecipes(refresh: true);
+                }
+              },
+            ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -143,6 +178,14 @@ class _MyRecipesPageState extends State<MyRecipesPage> {
                             isFavorite: false,
                             onFavoriteToggle: () {
                               recipeProvider.toggleFavorite(recipe.id);
+                            },
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => RecipeDetailPage(recipeId: recipe.id),
+                                ),
+                              );
                             },
                           );
                         },

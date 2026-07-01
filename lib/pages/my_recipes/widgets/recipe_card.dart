@@ -18,12 +18,14 @@ class RecipeCard extends StatelessWidget {
   final RecipeCardData recipe;
   final bool isFavorite;
   final VoidCallback onFavoriteToggle;
+  final VoidCallback? onTap;
 
   const RecipeCard({
     super.key,
     required this.recipe,
     required this.isFavorite,
     required this.onFavoriteToggle,
+    this.onTap,
   });
 
   @override
@@ -31,7 +33,7 @@ class RecipeCard extends StatelessWidget {
     return Card(
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: () {},
+        onTap: onTap,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
