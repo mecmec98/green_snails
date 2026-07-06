@@ -32,8 +32,13 @@ class HomePage extends StatelessWidget {
           ],
         ),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        actions: const [
-          ProfileAvatar(),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.storefront_outlined),
+            tooltip: 'My Store',
+            onPressed: () => Navigator.pushNamed(context, '/store'),
+          ),
+          const ProfileAvatar(),
         ],
       ),
       body: const HomeBody(),

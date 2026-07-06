@@ -19,9 +19,6 @@ class ProfileAvatar extends StatelessWidget {
           case 'my_recipes':
             Navigator.pushNamed(context, '/my-recipes');
             break;
-          case 'store':
-            Navigator.pushNamed(context, '/store');
-            break;
           case 'settings':
             Navigator.pushNamed(context, '/settings');
             break;
@@ -45,15 +42,6 @@ class ProfileAvatar extends StatelessWidget {
           child: ListTile(
             leading: Icon(Icons.menu_book_outlined),
             title: Text('My Recipes'),
-            contentPadding: EdgeInsets.zero,
-            visualDensity: VisualDensity.compact,
-          ),
-        ),
-        const PopupMenuItem(
-          value: 'store',
-          child: ListTile(
-            leading: Icon(Icons.storefront_outlined),
-            title: Text('My Store'),
             contentPadding: EdgeInsets.zero,
             visualDensity: VisualDensity.compact,
           ),
