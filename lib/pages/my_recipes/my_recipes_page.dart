@@ -10,17 +10,28 @@ import 'widgets/recipe_card.dart';
 
 IconData _iconFromName(String name) {
   switch (name) {
-    case 'wb_sunny': return Icons.wb_sunny_outlined;
-    case 'wb_cloudy': return Icons.wb_cloudy_outlined;
-    case 'nights_stay': return Icons.nights_stay_outlined;
-    case 'cake': return Icons.cake_outlined;
-    case 'eco': return Icons.eco_rounded;
-    case 'cookie': return Icons.cookie_outlined;
-    case 'local_drink': return Icons.local_drink_outlined;
-    case 'soup_kitchen': return Icons.soup_kitchen_outlined;
-    default: return Icons.grid_view_rounded;
+    case 'wb_sunny':
+      return Icons.wb_sunny_outlined;
+    case 'wb_cloudy':
+      return Icons.wb_cloudy_outlined;
+    case 'nights_stay':
+      return Icons.nights_stay_outlined;
+    case 'cake':
+      return Icons.cake_outlined;
+    case 'eco':
+      return Icons.eco_rounded;
+    case 'cookie':
+      return Icons.cookie_outlined;
+    case 'local_drink':
+      return Icons.local_drink_outlined;
+    case 'soup_kitchen':
+      return Icons.soup_kitchen_outlined;
+    default:
+      return Icons.grid_view_rounded;
   }
 }
+
+//test
 
 class MyRecipesPage extends StatefulWidget {
   const MyRecipesPage({super.key});
@@ -81,10 +92,10 @@ class _MyRecipesPageState extends State<MyRecipesPage> {
             Text(
               'My Recipes',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.primary,
-                    letterSpacing: 0.5,
-                  ),
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.primary,
+                letterSpacing: 0.5,
+              ),
             ),
           ],
         ),
@@ -97,7 +108,10 @@ class _MyRecipesPageState extends State<MyRecipesPage> {
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
             child: CreateNewRecipeBanner(
               onTap: () async {
-                final result = await Navigator.pushNamed(context, '/create-recipe');
+                final result = await Navigator.pushNamed(
+                  context,
+                  '/create-recipe',
+                );
                 if (result == true && mounted) {
                   context.read<RecipeProvider>().loadMyRecipes(refresh: true);
                 }
@@ -117,8 +131,8 @@ class _MyRecipesPageState extends State<MyRecipesPage> {
                 Text(
                   '${recipes.length} recipes',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
                 ),
                 const Spacer(),
                 IconButton(
@@ -149,47 +163,49 @@ class _MyRecipesPageState extends State<MyRecipesPage> {
             child: recipeProvider.loading && recipes.isEmpty
                 ? const Center(child: CircularProgressIndicator())
                 : recipes.isEmpty
-                    ? Center(
-                        child: Text(
-                          'No recipes found',
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                color: Theme.of(context).colorScheme.onSurfaceVariant,
-                              ),
-                        ),
-                      )
-                    : GridView.builder(
-                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                ? Center(
+                    child: Text(
+                      'No recipes found',
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  )
+                : GridView.builder(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                           mainAxisSpacing: 12,
                           crossAxisSpacing: 12,
                           childAspectRatio: 0.72,
                         ),
-                        itemCount: recipes.length,
-                        itemBuilder: (context, index) {
-                          final recipe = recipes[index];
-                          return RecipeCard(
-                            recipe: RecipeCardData(
-                              name: recipe.name,
-                              time: '${recipe.prepTime ?? 0} min',
-                              icon: Icons.menu_book,
-                              rating: recipe.ratingAvg,
+                    itemCount: recipes.length,
+                    itemBuilder: (context, index) {
+                      final recipe = recipes[index];
+                      return RecipeCard(
+                        recipe: RecipeCardData(
+                          name: recipe.name,
+                          time: '${recipe.prepTime ?? 0} min',
+                          icon: Icons.menu_book,
+                          rating: recipe.ratingAvg,
+                        ),
+                        isFavorite: false,
+                        onFavoriteToggle: () {
+                          recipeProvider.toggleFavorite(recipe.id);
+                        },
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) =>
+                                  RecipeDetailPage(recipeId: recipe.id),
                             ),
-                            isFavorite: false,
-                            onFavoriteToggle: () {
-                              recipeProvider.toggleFavorite(recipe.id);
-                            },
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => RecipeDetailPage(recipeId: recipe.id),
-                                ),
-                              );
-                            },
                           );
                         },
-                      ),
+                      );
+                    },
+                  ),
           ),
         ],
       ),
