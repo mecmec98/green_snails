@@ -1,5 +1,4 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../config/api_config.dart';
 import '../models/profile.dart';
 import 'api_client.dart';
 

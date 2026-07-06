@@ -1,6 +1,7 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 class ApiConfig {
-  static const String expressBaseUrl = 'https://greensnailsserver-production.up.railway.app/api';
-  static const String supabaseUrl = 'https://sldbffkiylcexknetkey.supabase.co';
-  static const String supabaseAnonKey =
-      'sb_publishable_i4Awqfg6DR-CirjSJ6f7qA_7Sem5Prk';
+  static String get expressBaseUrl => dotenv.env['EXPRESS_BASE_URL'] ?? '';
+  static String get supabaseUrl => dotenv.env['SUPABASE_URL'] ?? '';
+  static String get supabaseAnonKey => dotenv.env['SUPABASE_ANON_KEY'] ?? '';
 }

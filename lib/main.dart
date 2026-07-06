@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'config/api_config.dart';
@@ -16,9 +17,12 @@ import 'pages/market/market_page.dart';
 import 'pages/store/store_page.dart';
 import 'pages/my_recipes/my_recipes_page.dart';
 import 'pages/my_recipes/create_recipe_page.dart';
+import 'pages/store/create_store_item_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await dotenv.load();
 
   await Supabase.initialize(
     url: ApiConfig.supabaseUrl,
@@ -62,6 +66,7 @@ class MyApp extends StatelessWidget {
           '/store': (context) => const StorePage(),
           '/my-recipes': (context) => const MyRecipesPage(),
           '/create-recipe': (context) => const CreateRecipePage(),
+          '/create-store-item': (context) => const CreateStoreItemPage(),
         },
       ),
     );
